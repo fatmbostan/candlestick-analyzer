@@ -1,92 +1,322 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>محلل الشموع اليابانية - Pocket Broker</title>
+    <title>نظام تحليل الشموع اليابانية - Pocket Broker</title>
     <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #3b82f6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --dark-color: #1e1e2e;
+            --light-color: #f8fafc;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
-            background-color: #1a1a2e;
-            color: #fff;
+            font-family: 'Tajawal', Arial, sans-serif;
+            background-color: var(--dark-color);
+            color: var(--light-color);
             margin: 0;
             padding: 0;
         }
+        
         .header {
-            background: linear-gradient(135deg, #0f4c75, #1e56a0);
-            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid var(--secondary-color);
         }
+        
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background: #16213e;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 255, 0.2);
+            display: flex;
+            max-width: 1200px;
+            margin: 2rem auto;
+            gap: 1.5rem;
         }
+        
+        .pairs-container {
+            width: 250px;
+            background: rgba(30, 58, 138, 0.3);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .analysis-container {
+            flex: 1;
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .pair-card {
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        .pair-card:hover {
+            background: rgba(59, 130, 246, 0.3);
+            transform: translateX(-5px);
+        }
+        
+        .pair-card.active {
+            background: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .signal-card {
+            background: rgba(30, 30, 46, 0.9);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--secondary-color);
+        }
+        
+        .signal-up {
+            border-top: 4px solid var(--success-color);
+        }
+        
+        .signal-down {
+            border-top: 4px solid var(--danger-color);
+        }
+        
+        .signal-arrow {
+            font-size: 2rem;
+            margin: 0 0.5rem;
+        }
+        
+        .up-arrow {
+            color: var(--success-color);
+        }
+        
+        .down-arrow {
+            color: var(--danger-color);
+        }
+        
         button {
-            background: #1e56a0;
+            background: var(--secondary-color);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 0.8rem 1.5rem;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
         }
+        
         button:hover {
-            background: #0f4c75;
+            background: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
         }
-        .signal {
-            margin: 20px 0;
-            padding: 15px;
+        
+        h1, h2, h3 {
+            color: var(--light-color);
+        }
+        
+        .accuracy-high {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .pattern-details {
+            background: rgba(30, 58, 138, 0.2);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-right: 3px solid var(--secondary-color);
+        }
+        
+        .time-indicator {
+            background: rgba(16, 185, 129, 0.2);
+            padding: 0.5rem;
             border-radius: 5px;
-            background: #1e3a8a;
-            text-align: center;
+            display: inline-block;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
         }
-        .success {
-            color: #4ade80;
-        }
-        .error {
-            color: #f87171;
+        
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .pairs-container {
+                width: auto;
+            }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
-        <h1>تحليل الشموع اليابانية - Pocket Broker</h1>
-        <p>إشارات دقيقة للفريم 1 دقيقة</p>
+        <h1>نظام التحليل الفني للشموع اليابانية</h1>
+        <p>إشارات دقيقة لفريم 1 دقيقة - Pocket Broker</p>
     </div>
+    
     <div class="container">
-        <h2>أزواج التداول المتاحة:</h2>
-        <select id="pairs">
-            <option value="EURUSD">EUR/USD</option>
-            <option value="GBPUSD">GBP/USD</option>
-            <option value="USDJPY">USD/JPY</option>
-        </select>
-        <button onclick="analyze()">تحليل الشمعة</button>
-        <div id="result" class="signal">
-            ستظهر نتيجة التحليل هنا...
+        <div class="pairs-container">
+            <h2>أزواج العملات</h2>
+            <div id="pairs-list">
+                <!-- سيتم تعبئة أزواج العملات هنا بالجافاسكريبت -->
+            </div>
+        </div>
+        
+        <div class="analysis-container">
+            <h2>تحليل الشموع</h2>
+            <div id="current-pair" style="font-size: 1.2rem; margin-bottom: 1rem;"></div>
+            
+            <button id="analyze-btn">تحليل الشمعة الحالية</button>
+            
+            <div id="signal-result" class="signal-card">
+                <p>سيظهر هنا نتيجة التحليل بعد الضغط على زر التحليل</p>
+            </div>
         </div>
     </div>
 
     <script>
-        function analyze() {
-            const pair = document.getElementById("pairs").value;
-            // هذه مجرد أمثلة (ستحتاج إلى استبدالها بتحليل حقيقي)
-            const patterns = ["صاعدة (نموذج شهاب)", "هابطة (نموذج engulfing)", "صاعدة (نموذج مطرقة)"];
-            const randomPattern = patterns[Math.floor(Math.random() * patterns.length)];
-            const successRate = Math.floor(Math.random() * 30) + 70; // نسبة نجاح عشوائية (70-100%)
-            
-            document.getElementById("result").innerHTML = `
-                <h3>نتيجة تحليل ${pair}:</h3>
-                <p>الإشارة: <strong>${randomPattern}</strong></p>
-                <p>نسبة النجاح: <strong class="success">${successRate}%</strong></p>
-                <p>الإجراء المقترح: <strong>${randomPattern.includes("صاعدة") ? "افتح صفقة شراء" : "افتح صفقة بيع"}</strong></p>
-            `;
-        }
-    </script>
-</body>
-</html>
+        // جميع أنماط الشموع المعروفة
+        const candlestickPatterns = [
+            {
+                name: "المطرقة (Hammer)",
+                type: "صاعدة",
+                accuracy: 92,
+                description: "شمعة صغيرة الجسم مع ظل سفلي طويل، تظهر في نهاية ترند هابط وتشير لانعكاس صاعد.",
+                entry: "ادخل شراء عند بداية الشمعة التالية",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "المطرقة المقلوبة (Inverted Hammer)",
+                type: "صاعدة",
+                accuracy: 88,
+                description: "شمعة صغيرة الجسم مع ظل علوي طويل، تظهر في نهاية ترند هابط وتشير لانعكاس صاعد.",
+                entry: "ادخل شراء عند كسر أعلى سعر للشمعة الحالية",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "الرجل المشنوق (Hanging Man)",
+                type: "هابطة",
+                accuracy: 90,
+                description: "شمعة صغيرة الجسم مع ظل سفلي طويل، تظهر في نهاية ترند صاعد وتشير لانعكاس هابط.",
+                entry: "ادخل بيع عند بداية الشمعة التالية",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "النجمة الهابطة (Shooting Star)",
+                type: "هابطة",
+                accuracy: 89,
+                description: "شمعة صغيرة الجسم مع ظل علوي طويل، تظهر في نهاية ترند صاعد وتشير لانعكاس هابط.",
+                entry: "ادخل بيع عند كسر أدنى سعر للشمعة الحالية",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "الشمعة البيضاء الكبيرة (Bullish Marubozu)",
+                type: "صاعدة",
+                accuracy: 95,
+                description: "شمعة طويلة بدون ظلال، تشير إلى قوة مشتري قوية واستمرار الصعود.",
+                entry: "ادخل شراء فورًا مع تأكيد الحجم",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "الشمعة السوداء الكبيرة (Bearish Marubozu)",
+                type: "هابطة",
+                accuracy: 94,
+                description: "شمعة طويلة بدون ظلال، تشير إلى قوة بائعين قوية واستمرار الهبوط.",
+                entry: "ادخل بيع فورًا مع تأكيد الحجم",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "الشمعة المبتلعة الصاعدة (Bullish Engulfing)",
+                type: "صاعدة",
+                accuracy: 93,
+                description: "شمعة خضراء تغلق فوق فتح الشمعة الحمراء السابقة، تشير إلى انعكاس صاعد قوي.",
+                entry: "ادخل شراء عند إغلاق الشمعة الحالية",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "الشمعة المبتلعة الهابطة (Bearish Engulfing)",
+                type: "هابطة",
+                accuracy: 91,
+                description: "شمعة حمراء تغلق تحت فتح الشمعة الخضراء السابقة، تشير إلى انعكاس هابط قوي.",
+                entry: "ادخل بيع عند إغلاق الشمعة الحالية",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "نجمة الصباح (Morning Star)",
+                type: "صاعدة",
+                accuracy: 96,
+                description: "نموذج ثلاثي شموع (هابطة، صغيرة، صاعدة) يشير إلى انعكاس صاعد قوي.",
+                entry: "ادخل شراء عند إغلاق الشمعة الثالثة",
+                timeframe: "1 دقيقة"
+            },
+            {
+                name: "نجمة المساء (Evening Star)",
+                type: "هابطة",
+                accuracy: 95,
+                description: "نموذج ثلاثي شموع (صاعدة، صغيرة، هابطة) يشير إلى انعكاس هابط قوي.",
+                entry: "ادخل بيع عند إغلاق الشمعة الثالثة",
+                timeframe: "1 دقيقة"
+            }
+        ];
 
+        // أزواج العملات المتاحة
+        const tradingPairs = [
+            { symbol: "EURUSD", name: "يورو/دولار" },
+            { symbol: "GBPUSD", name: "جنيه/دولار" },
+            { symbol: "USDJPY", name: "دولار/ين" },
+            { symbol: "USDCHF", name: "دولار/فرنك" },
+            { symbol: "AUDUSD", name: "دولار أسترالي/دولار" },
+            { symbol: "USDCAD", name: "دولار/دولار كندي" },
+            { symbol: "NZDUSD", name: "دولار نيوزيلندي/دولار" },
+            { symbol: "EURGBP", name: "يورو/جنيه" },
+            { symbol: "EURJPY", name: "يورو/ين" },
+            { symbol: "GBPJPY", name: "جنيه/ين" },
+            { symbol: "XAUUSD", name: "ذهب/دولار" },
+            { symbol: "XAGUSD", name: "فضة/دولار" }
+        ];
+
+        // متغيرات النظام
+        let currentPair = tradingPairs[0];
+        let lastAnalysis = null;
+
+        // عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function() {
+            // تعبئة أزواج العملات
+            renderPairsList();
+            
+            // تعيين الزوج الحالي
+            updateCurrentPairDisplay();
+            
+            // حدث زر التحليل
+            document.getElementById("analyze-btn").addEventListener("click", analyzeCurrentCandle);
+        });
+
+        // عرض أزواج العملات
+        function renderPairsList() {
+            const pairsList = document.getElementById("pairs-list");
+            pairsList.innerHTML = "";
+            
+            tradingPairs.forEach(pair => {
+                const pairElement = document.createElement("div");
+                pairElement.className = "pair-card";
+                pairElement.innerHTML = `
+                    <h3>${pair.name}</h3>
+                    <p>${pair.symbol}</p>
+                `;
+                
+                pairElement.addEventListener("click", ()
