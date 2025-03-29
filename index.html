@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>محلل الشموع اليابانية - Pocket Broker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: linear-gradient(135deg, #0f4c75, #1e56a0);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #16213e;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 255, 0.2);
+        }
+        button {
+            background: #1e56a0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0f4c75;
+        }
+        .signal {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            background: #1e3a8a;
+            text-align: center;
+        }
+        .success {
+            color: #4ade80;
+        }
+        .error {
+            color: #f87171;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>تحليل الشموع اليابانية - Pocket Broker</h1>
+        <p>إشارات دقيقة للفريم 1 دقيقة</p>
+    </div>
+    <div class="container">
+        <h2>أزواج التداول المتاحة:</h2>
+        <select id="pairs">
+            <option value="EURUSD">EUR/USD</option>
+            <option value="GBPUSD">GBP/USD</option>
+            <option value="USDJPY">USD/JPY</option>
+        </select>
+        <button onclick="analyze()">تحليل الشمعة</button>
+        <div id="result" class="signal">
+            ستظهر نتيجة التحليل هنا...
+        </div>
+    </div>
+
+    <script>
+        function analyze() {
+            const pair = document.getElementById("pairs").value;
+            // هذه مجرد أمثلة (ستحتاج إلى استبدالها بتحليل حقيقي)
+            const patterns = ["صاعدة (نموذج شهاب)", "هابطة (نموذج engulfing)", "صاعدة (نموذج مطرقة)"];
+            const randomPattern = patterns[Math.floor(Math.random() * patterns.length)];
+            const successRate = Math.floor(Math.random() * 30) + 70; // نسبة نجاح عشوائية (70-100%)
+            
+            document.getElementById("result").innerHTML = `
+                <h3>نتيجة تحليل ${pair}:</h3>
+                <p>الإشارة: <strong>${randomPattern}</strong></p>
+                <p>نسبة النجاح: <strong class="success">${successRate}%</strong></p>
+                <p>الإجراء المقترح: <strong>${randomPattern.includes("صاعدة") ? "افتح صفقة شراء" : "افتح صفقة بيع"}</strong></p>
+            `;
+        }
+    </script>
+</body>
+</html>
