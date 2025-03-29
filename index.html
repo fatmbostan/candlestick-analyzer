@@ -24,10 +24,18 @@
         
         .header {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 1.5rem;
+            padding: 1rem;
             text-align: center;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             border-bottom: 2px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo {
+            height: 50px;
+            margin-left: 15px;
         }
         
         .container {
@@ -128,11 +136,6 @@
             box-shadow: 0 5px 15px rgba(42, 82, 138, 0.4);
         }
         
-        button:disabled {
-            background: #4a5568;
-            cursor: not-allowed;
-        }
-        
         h1, h2, h3 {
             color: var(--light-color);
         }
@@ -160,16 +163,12 @@
         }
         
         .market-status {
-            background: rgba(229, 62, 62, 0.2);
+            background: rgba(56, 161, 105, 0.2);
             padding: 0.8rem;
             border-radius: 8px;
             margin-top: 1rem;
             text-align: center;
             font-weight: bold;
-        }
-        
-        .market-open {
-            background: rgba(56, 161, 105, 0.2);
         }
         
         @media (max-width: 768px) {
@@ -180,6 +179,15 @@
             .pairs-container {
                 width: auto;
             }
+            
+            .header {
+                flex-direction: column;
+                padding: 1rem 0.5rem;
+            }
+            
+            .logo {
+                margin: 10px 0 0 0;
+            }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
@@ -187,8 +195,11 @@
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-chart-line"></i> نظام التحليل الفني للشموع اليابانية</h1>
-        <p>إشارات دقيقة لفريم 1 دقيقة - Pocket Broker OTC</p>
+        <img src="https://via.placeholder.com/150x50/1a365d/ffffff?text=Pocket+Broker" alt="Pocket Broker Logo" class="logo">
+        <div>
+            <h1 style="margin: 0;"><i class="fas fa-chart-line"></i> نظام التحليل الفني للشموع</h1>
+            <p style="margin: 0;">إشارات دقيقة لفريم 1 دقيقة - سوق OTC</p>
+        </div>
     </div>
     
     <div class="container">
@@ -203,12 +214,12 @@
             <h2><i class="fas fa-chart-bar"></i> تحليل الشموع</h2>
             <div id="current-pair" style="font-size: 1.2rem; margin-bottom: 1rem;"></div>
             
-            <div id="market-status" class="market-status">
-                جاري التحقق من حالة السوق...
+            <div class="market-status">
+                <i class="fas fa-clock"></i> سوق OTC يعمل على مدار الساعة طوال الأسبوع
             </div>
             
-            <button id="analyze-btn" disabled>
-                <i class="fas fa-spinner fa-spin"></i> جاري التحميل...
+            <button id="analyze-btn">
+                <i class="fas fa-chart-line"></i> تحليل الشمعة الحالية
             </button>
             
             <div id="signal-result" class="signal-card">
@@ -284,40 +295,60 @@
         // متغيرات النظام
         let currentPair = null;
         let lastAnalysis = null;
-        let marketOpen = false;
 
         // عند تحميل الصفحة
         document.addEventListener("DOMContentLoaded", function() {
-            checkMarketStatus();
             renderPairsList();
         });
-
-        // التحقق من حالة السوق
-        function checkMarketStatus() {
-            const now = new Date();
-            const day = now.getDay(); // 0 لأحد، 6 لسبت
-            const hour = now.getHours();
-            
-            // السوق مغلق أيام السبت والأحد وجزء من الجمعة
-            if (day === 5 && hour >= 22 || day === 6 || day === 0) {
-                marketOpen = false;
-                document.getElementById('market-status').textContent = 'السوق مغلق حاليًا (OTC متوقف)';
-                document.getElementById('market-status').classList.remove('market-open');
-                document.getElementById('analyze-btn').disabled = true;
-                document.getElementById('analyze-btn').innerHTML = '<i class="fas fa-lock"></i> السوق مغلق';
-            } else {
-                marketOpen = true;
-                document.getElementById('market-status').textContent = 'السوق مفتوح حاليًا (OTC متاح)';
-                document.getElementById('market-status').classList.add('market-open');
-                document.getElementById('analyze-btn').disabled = false;
-                document.getElementById('analyze-btn').innerHTML = '<i class="fas fa-chart-line"></i> تحليل الشمعة الحالية';
-            }
-            
-            // تحديث حالة السوق كل دقيقة
-            setTimeout(checkMarketStatus, 60000);
-        }
 
         // عرض أزواج العملات
         function renderPairsList() {
             const pairsList = document.getElementById("pairs-list");
-            pairs
+            pairsList.innerHTML = "";
+            
+            tradingPairs.forEach(pair => {
+                const pairElement = document.createElement("div");
+                pairElement.className = "pair-card";
+                pairElement.innerHTML = `
+                    <h3>${pair.name}</h3>
+                    <p>${pair.symbol}</p>
+                `;
+                
+                pairElement.addEventListener("click", function() {
+                    currentPair = pair;
+                    updateCurrentPairDisplay();
+                    document.querySelectorAll(".pair-card").forEach(card => {
+                        card.classList.remove("active");
+                    });
+                    this.classList.add("active");
+                });
+                
+                pairsList.appendChild(pairElement);
+            });
+            
+            // تنشيط الزوج الأول افتراضيًا
+            if (pairsList.firstChild) {
+                pairsList.firstChild.click();
+            }
+        }
+
+        // تحديث عرض الزوج الحالي
+        function updateCurrentPairDisplay() {
+            if (!currentPair) return;
+            document.getElementById("current-pair").innerHTML = `
+                <strong>الزوج الحالي:</strong> ${currentPair.name} (${currentPair.symbol})
+            `;
+        }
+
+        // تحليل الشمعة الحالية (محاكاة واقعية)
+        function analyzeCurrentCandle() {
+            if (!currentPair) return;
+            
+            const btn = document.getElementById("analyze-btn");
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحليل...';
+            
+            // محاكاة وقت التحليل (1-3 ثواني)
+            setTimeout(() => {
+                const now = new Date();
+                const
