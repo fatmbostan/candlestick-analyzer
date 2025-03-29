@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تحليل الشموع اليابانية - Pocket Broker</title>
+    <title>نظام تحليل الشموع - Pocket Broker OTC</title>
     <style>
         :root {
-            --primary-color: #1e3a8a;
-            --secondary-color: #3b82f6;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --dark-color: #1e1e2e;
-            --light-color: #f8fafc;
+            --primary-color: #1a365d;
+            --secondary-color: #2a528a;
+            --success-color: #38a169;
+            --danger-color: #e53e3e;
+            --dark-color: #1a202c;
+            --light-color: #f7fafc;
         }
         
         body {
@@ -36,28 +35,30 @@
             max-width: 1200px;
             margin: 2rem auto;
             gap: 1.5rem;
+            padding: 0 1rem;
         }
         
         .pairs-container {
-            width: 250px;
-            background: rgba(30, 58, 138, 0.3);
+            width: 280px;
+            background: rgba(26, 54, 93, 0.3);
             border-radius: 10px;
             padding: 1rem;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             border: 1px solid var(--secondary-color);
+            height: fit-content;
         }
         
         .analysis-container {
             flex: 1;
-            background: rgba(30, 30, 46, 0.8);
+            background: rgba(26, 32, 44, 0.8);
             border-radius: 10px;
             padding: 1.5rem;
-            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 20px rgba(42, 82, 138, 0.2);
             border: 1px solid var(--secondary-color);
         }
         
         .pair-card {
-            background: rgba(59, 130, 246, 0.1);
+            background: rgba(42, 82, 138, 0.1);
             border-radius: 8px;
             padding: 0.8rem;
             margin-bottom: 0.8rem;
@@ -67,7 +68,7 @@
         }
         
         .pair-card:hover {
-            background: rgba(59, 130, 246, 0.3);
+            background: rgba(42, 82, 138, 0.3);
             transform: translateX(-5px);
         }
         
@@ -77,12 +78,13 @@
         }
         
         .signal-card {
-            background: rgba(30, 30, 46, 0.9);
+            background: rgba(26, 32, 44, 0.9);
             border-radius: 10px;
             padding: 1.5rem;
             margin-top: 1.5rem;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             border: 1px solid var(--secondary-color);
+            min-height: 300px;
         }
         
         .signal-up {
@@ -94,7 +96,7 @@
         }
         
         .signal-arrow {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin: 0 0.5rem;
         }
         
@@ -117,12 +119,18 @@
             font-weight: bold;
             transition: all 0.3s ease;
             margin-top: 1rem;
+            width: 100%;
         }
         
         button:hover {
             background: var(--primary-color);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 5px 15px rgba(42, 82, 138, 0.4);
+        }
+        
+        button:disabled {
+            background: #4a5568;
+            cursor: not-allowed;
         }
         
         h1, h2, h3 {
@@ -135,7 +143,7 @@
         }
         
         .pattern-details {
-            background: rgba(30, 58, 138, 0.2);
+            background: rgba(26, 54, 93, 0.2);
             padding: 1rem;
             border-radius: 8px;
             margin-top: 1rem;
@@ -143,12 +151,25 @@
         }
         
         .time-indicator {
-            background: rgba(16, 185, 129, 0.2);
+            background: rgba(56, 161, 105, 0.2);
             padding: 0.5rem;
             border-radius: 5px;
             display: inline-block;
             margin-top: 0.5rem;
             font-size: 0.9rem;
+        }
+        
+        .market-status {
+            background: rgba(229, 62, 62, 0.2);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .market-open {
+            background: rgba(56, 161, 105, 0.2);
         }
         
         @media (max-width: 768px) {
@@ -162,176 +183,141 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="header">
-        <h1>نظام التحليل الفني للشموع اليابانية</h1>
-        <p>إشارات دقيقة لفريم 1 دقيقة - Pocket Broker</p>
+        <h1><i class="fas fa-chart-line"></i> نظام التحليل الفني للشموع اليابانية</h1>
+        <p>إشارات دقيقة لفريم 1 دقيقة - Pocket Broker OTC</p>
     </div>
     
     <div class="container">
         <div class="pairs-container">
-            <h2>أزواج العملات</h2>
+            <h2><i class="fas fa-coins"></i> أزواج العملات (OTC)</h2>
             <div id="pairs-list">
                 <!-- سيتم تعبئة أزواج العملات هنا بالجافاسكريبت -->
             </div>
         </div>
         
         <div class="analysis-container">
-            <h2>تحليل الشموع</h2>
+            <h2><i class="fas fa-chart-bar"></i> تحليل الشموع</h2>
             <div id="current-pair" style="font-size: 1.2rem; margin-bottom: 1rem;"></div>
             
-            <button id="analyze-btn">تحليل الشمعة الحالية</button>
+            <div id="market-status" class="market-status">
+                جاري التحقق من حالة السوق...
+            </div>
+            
+            <button id="analyze-btn" disabled>
+                <i class="fas fa-spinner fa-spin"></i> جاري التحميل...
+            </button>
             
             <div id="signal-result" class="signal-card">
-                <p>سيظهر هنا نتيجة التحليل بعد الضغط على زر التحليل</p>
+                <p style="text-align: center; margin-top: 50px;">
+                    <i class="fas fa-chart-pie" style="font-size: 2rem; color: var(--secondary-color);"></i><br>
+                    سيظهر هنا نتيجة التحليل بعد الضغط على زر التحليل
+                </p>
             </div>
         </div>
     </div>
 
-<script>
-    // جميع أنماط الشموع المعروفة
-    const candlestickPatterns = [
-        {
-            name: "المطرقة (Hammer)",
-            type: "صاعدة",
-            accuracy: 92,
-            description: "شمعة صغيرة الجسم مع ظل سفلي طويل، تظهر في نهاية ترند هابط وتشير لانعكاس صاعد.",
-            entry: "ادخل شراء عند بداية الشمعة التالية",
-            timeframe: "1 دقيقة"
-        },
-        {
-            name: "المطرقة المقلوبة (Inverted Hammer)",
-            type: "صاعدة",
-            accuracy: 88,
-            description: "شمعة صغيرة الجسم مع ظل علوي طويل، تظهر في نهاية ترند هابط وتشير لانعكاس صاعد.",
-            entry: "ادخل شراء عند كسر أعلى سعر للشمعة الحالية",
-            timeframe: "1 دقيقة"
-        },
-        {
-            name: "الرجل المشنوق (Hanging Man)",
-            type: "هابطة",
-            accuracy: 90,
-            description: "شمعة صغيرة الجسم مع ظل سفلي طويل، تظهر في نهاية ترند صاعد وتشير لانعكاس هابط.",
-            entry: "ادخل بيع عند بداية الشمعة التالية",
-            timeframe: "1 دقيقة"
-        },
-        {
-            name: "النجمة الهابطة (Shooting Star)",
-            type: "هابطة",
-            accuracy: 89,
-            description: "شمعة صغيرة الجسم مع ظل علوي طويل، تظهر في نهاية ترند صاعد وتشير لانعكاس هابط.",
-            entry: "ادخل بيع عند كسر أدنى سعر للشمعة الحالية",
-            timeframe: "1 دقيقة"
-        }
-    ];
+    <script>
+        // أزواج OTC الخاصة بـ Pocket Broker فقط
+        const tradingPairs = [
+            { symbol: "EUR/JPY OTC", name: "يورو/ين ياباني" },
+            { symbol: "EUR/CHF OTC", name: "يورو/فرنك سويسري" },
+            { symbol: "BHD/CNY OTC", name: "دينار بحريني/يوان صيني" },
+            { symbol: "AUD/NZD OTC", name: "دولار أسترالي/دولار نيوزيلندي" },
+            { symbol: "AUD/CAD OTC", name: "دولار أسترالي/دولار كندي" },
+            { symbol: "AED/CNY OTC", name: "درهم إماراتي/يوان صيني" }
+        ];
 
-    // أزواج العملات المتاحة
-    const tradingPairs = [
-        { symbol: "EURUSD", name: "يورو/دولار" },
-        { symbol: "GBPUSD", name: "جنيه/دولار" },
-        { symbol: "USDJPY", name: "دولار/ين" }
-    ];
-
-    // متغيرات النظام
-    let currentPair = tradingPairs[0];
-    let lastAnalysis = null;
-
-    // عند تحميل الصفحة
-    document.addEventListener("DOMContentLoaded", function() {
-        // تعبئة أزواج العملات
-        renderPairsList();
-        
-        // تعيين الزوج الحالي
-        updateCurrentPairDisplay();
-        
-        // حدث زر التحليل
-        document.getElementById("analyze-btn").addEventListener("click", analyzeCurrentCandle);
-    });
-
-    // عرض أزواج العملات
-    function renderPairsList() {
-        const pairsList = document.getElementById("pairs-list");
-        pairsList.innerHTML = "";
-        
-        tradingPairs.forEach(pair => {
-            const pairElement = document.createElement("div");
-            pairElement.className = "pair-card";
-            pairElement.innerHTML = `
-                <h3>${pair.name}</h3>
-                <p>${pair.symbol}</p>
-            `;
-            
-            pairElement.addEventListener("click", function() {
-                currentPair = pair;
-                updateCurrentPairDisplay();
-                document.querySelectorAll(".pair-card").forEach(card => {
-                    card.classList.remove("active");
-                });
-                this.classList.add("active");
-            });
-            
-            pairsList.appendChild(pairElement);
-        });
-        
-        // تنشيط الزوج الأول افتراضيًا
-        pairsList.firstChild.classList.add("active");
-    }
-
-    // تحديث عرض الزوج الحالي
-    function updateCurrentPairDisplay() {
-        document.getElementById("current-pair").innerHTML = `
-            <strong>الزوج الحالي:</strong> ${currentPair.name} (${currentPair.symbol})
-        `;
-    }
-
-    // تحليل الشمعة الحالية
-    function analyzeCurrentCandle() {
-        const randomPattern = candlestickPatterns[Math.floor(Math.random() * candlestickPatterns.length)];
-        const signalStrength = Math.floor(Math.random() * 20) + 80;
-        
-        lastAnalysis = {
-            pair: currentPair,
-            pattern: randomPattern,
-            strength: signalStrength,
-            time: new Date().toLocaleTimeString()
+        // أنماط الشموع مع تحليل أكثر واقعية
+        const candlestickPatterns = {
+            bullish: [
+                {
+                    name: "المطرقة (Hammer)",
+                    accuracy: 82,
+                    description: "ظهور شمعة صغيرة الجسم مع ظل سفلي طويل (ضعف الجسم على الأقل) في نهاية ترند هابط.",
+                    entry: "ادخل شراء عند بداية الشمعة التالية",
+                    confirmation: "تأكد من حجم التداول أعلى من المتوسط"
+                },
+                {
+                    name: "الابتلاع الصاعد (Bullish Engulfing)",
+                    accuracy: 85,
+                    description: "شمعة خضراء تغلق فوق فتح الشمعة الحمراء السابقة مع جسم كبير يبتلع الجسم السابق.",
+                    entry: "ادخل شراء عند إغلاق الشمعة الحالية",
+                    confirmation: "تأكد من وجود دعم قوي في المنطقة"
+                },
+                {
+                    name: "نجمة الصباح (Morning Star)",
+                    accuracy: 88,
+                    description: "نموذج ثلاثي شموع (هابطة، دوجي، صاعدة) مع فجوة سعرية بين الشموع.",
+                    entry: "ادخل شراء عند إغلاق الشمعة الثالثة",
+                    confirmation: "تأكد من تصاعد حجم التداول"
+                }
+            ],
+            bearish: [
+                {
+                    name: "الرجل المشنوق (Hanging Man)",
+                    accuracy: 83,
+                    description: "شمعة صغيرة الجسم مع ظل سفلي طويل في نهاية ترند صاعد.",
+                    entry: "ادخل بيع عند بداية الشمعة التالية",
+                    confirmation: "تأكد من مقاومة قوية في المنطقة"
+                },
+                {
+                    name: "الابتلاع الهابط (Bearish Engulfing)",
+                    accuracy: 84,
+                    description: "شمعة حمراء تغلق تحت فتح الشمعة الخضراء السابقة مع جسم كبير يبتلع الجسم السابق.",
+                    entry: "ادخل بيع عند إغلاق الشمعة الحالية",
+                    confirmation: "تأكد من انخفاض حجم التداول في الشمعة الصاعدة السابقة"
+                },
+                {
+                    name: "نجمة المساء (Evening Star)",
+                    accuracy: 86,
+                    description: "نموذج ثلاثي شموع (صاعدة، دوجي، هابطة) مع فجوة سعرية بين الشموع.",
+                    entry: "ادخل بيع عند إغلاق الشمعة الثالثة",
+                    confirmation: "تأكد من وجود مقاومة قوية"
+                }
+            ]
         };
-        
-        renderSignalResult();
-    }
 
-    // عرض نتيجة الإشارة
-    function renderSignalResult() {
-        if (!lastAnalysis) return;
-        
-        const signalResult = document.getElementById("signal-result");
-        const pattern = lastAnalysis.pattern;
-        
-        signalResult.className = `signal-card ${pattern.type === 'صاعدة' ? 'signal-up' : 'signal-down'}`;
-        
-        signalResult.innerHTML = `
-            <h3>نتيجة تحليل ${lastAnalysis.pair.symbol}</h3>
-            <div style="display: flex; align-items: center; justify-content: center; margin: 1rem 0;">
-                <span style="font-size: 1.5rem;">${pattern.type === 'صاعدة' ? 'إشارة شراء قوية' : 'إشارة بيع قوية'}</span>
-                <span class="signal-arrow ${pattern.type === 'صاعدة' ? 'up-arrow' : 'down-arrow'}">
-                    ${pattern.type === 'صاعدة' ? '↑' : '↓'}
-                </span>
-            </div>
+        // متغيرات النظام
+        let currentPair = null;
+        let lastAnalysis = null;
+        let marketOpen = false;
+
+        // عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", function() {
+            checkMarketStatus();
+            renderPairsList();
+        });
+
+        // التحقق من حالة السوق
+        function checkMarketStatus() {
+            const now = new Date();
+            const day = now.getDay(); // 0 لأحد، 6 لسبت
+            const hour = now.getHours();
             
-            <div class="pattern-details">
-                <p><strong>النمط:</strong> ${pattern.name}</p>
-                <p><strong>نسبة النجاح:</strong> <span class="accuracy-high">${pattern.accuracy}%</span></p>
-                <p><strong>قوة الإشارة:</strong> ${lastAnalysis.strength}%</p>
-                <p><strong>الوصف:</strong> ${pattern.description}</p>
-            </div>
+            // السوق مغلق أيام السبت والأحد وجزء من الجمعة
+            if (day === 5 && hour >= 22 || day === 6 || day === 0) {
+                marketOpen = false;
+                document.getElementById('market-status').textContent = 'السوق مغلق حاليًا (OTC متوقف)';
+                document.getElementById('market-status').classList.remove('market-open');
+                document.getElementById('analyze-btn').disabled = true;
+                document.getElementById('analyze-btn').innerHTML = '<i class="fas fa-lock"></i> السوق مغلق';
+            } else {
+                marketOpen = true;
+                document.getElementById('market-status').textContent = 'السوق مفتوح حاليًا (OTC متاح)';
+                document.getElementById('market-status').classList.add('market-open');
+                document.getElementById('analyze-btn').disabled = false;
+                document.getElementById('analyze-btn').innerHTML = '<i class="fas fa-chart-line"></i> تحليل الشمعة الحالية';
+            }
             
-            <div style="margin-top: 1.5rem; background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 8px;">
-                <h4>التوصية:</h4>
-                <p><strong>${pattern.entry}</strong></p>
-                <div class="time-indicator">
-                    الوقت المناسب: ${pattern.timeframe} - ${lastAnalysis.time}
-                </div>
-            </div>
-        `;
-    }
-                              </script>
+            // تحديث حالة السوق كل دقيقة
+            setTimeout(checkMarketStatus, 60000);
+        }
+
+        // عرض أزواج العملات
+        function renderPairsList() {
+            const pairsList = document.getElementById("pairs-list");
+            pairs
